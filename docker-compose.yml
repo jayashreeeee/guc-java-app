@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+
+  frontend:
+    build:
+      context: ./guc-frontend/guc-frontend
+      dockerfile: Dockerfile
+    container_name: guc-frontend
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./guc-backend/guc-backend
+      dockerfile: Dockerfile
+    container_name: guc-backend
+    ports:
+      - "9090:9090"
+    restart: unless-stopped

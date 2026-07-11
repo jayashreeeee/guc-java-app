@@ -1,0 +1,19 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-07-12T00:13:49.582+05:30  INFO 82023 --- [guc-backend] [           main] c.g.b.guc_backend.GucBackendApplication  : Starting GucBackendApplication v0.0.1-SNAPSHOT using Java 17.0.19 with PID 82023 (/Users/umeshchandra/GUC/guc-java-app/guc-backend/guc-backend/target/guc-backend-0.0.1-SNAPSHOT.jar started by umeshchandra in /Users/umeshchandra/GUC/guc-java-app/guc-backend/guc-backend)
+2026-07-12T00:13:49.583+05:30  INFO 82023 --- [guc-backend] [           main] c.g.b.guc_backend.GucBackendApplication  : No active profile set, falling back to 1 default profile: "default"
+2026-07-12T00:13:49.848+05:30  INFO 82023 --- [guc-backend] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 9090 (http)
+2026-07-12T00:13:49.853+05:30  INFO 82023 --- [guc-backend] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-07-12T00:13:49.853+05:30  INFO 82023 --- [guc-backend] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-07-12T00:13:49.862+05:30  INFO 82023 --- [guc-backend] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-07-12T00:13:49.862+05:30  INFO 82023 --- [guc-backend] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 259 ms
+2026-07-12T00:13:49.973+05:30  INFO 82023 --- [guc-backend] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 9090 (http) with context path '/'
+2026-07-12T00:13:49.979+05:30  INFO 82023 --- [guc-backend] [           main] c.g.b.guc_backend.GucBackendApplication  : Started GucBackendApplication in 0.522 seconds (process running for 0.668)
