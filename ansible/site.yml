@@ -1,0 +1,115 @@
+---
+- hosts: web
+  become: yes
+
+  vars:
+    tomcat_version: 9.0.108
+    tomcat_home: /opt/tomcat
+    war_name: guc-backend.war
+
+  tasks:
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Java
+      apt:
+        name: openjdk-17-jdk
+        state: present
+
+    - name: Create Tomcat user
+      user:
+        name: tomcat
+        shell: /bin/false
+        home: "{{ tomcat_home }}"
+
+    - name: Download Tomcat
+      get_url:
+        url: "https://archive.apache.org/dist/tomcat/tomcat-9/v{{ tomcat_version }}/bin/apache-tomcat-{{ tomcat_version }}.tar.gz"
+        dest: /tmp/tomcat.tar.gz
+
+    - name: Create Tomcat directory
+      file:
+        path: "{{ tomcat_home }}"
+        state: directory
+
+    - name: Extract Tomcat
+      unarchive:
+        src: /tmp/tomcat.tar.gz
+        dest: "{{ tomcat_home }}"
+        remote_src: yes
+        extra_opts:
+          - --strip-components=1
+
+    - name: Change Tomcat ownership
+      file:
+        path: "{{ tomcat_home }}"
+        owner: tomcat
+        group: tomcat
+        recurse: yes
+
+    - name: Stop Tomcat if running
+      systemd:
+        name: tomcat
+        state: stopped
+      ignore_errors: yes
+
+    - name: Remove old WAR file
+      file:
+        path: "{{ tomcat_home }}/webapps/{{ war_name }}"
+        state: absent
+
+    - name: Copy GUC Backend WAR
+      copy:
+        src: "{{ war_name }}"
+        dest: "{{ tomcat_home }}/webapps/{{ war_name }}"
+        owner: tomcat
+        group: tomcat
+        mode: '0644'
+
+    - name: Create Tomcat systemd service
+      copy:
+        dest: /etc/systemd/system/tomcat.service
+        content: |
+          [Unit]
+          Description=Apache Tomcat
+          After=network.target
+
+          [Service]
+          Type=forking
+
+          Environment=JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+          Environment=CATALINA_PID={{ tomcat_home }}/temp/tomcat.pid
+          Environment=CATALINA_HOME={{ tomcat_home }}
+          Environment=CATALINA_BASE={{ tomcat_home }}
+
+          ExecStart={{ tomcat_home }}/bin/startup.sh
+          ExecStop={{ tomcat_home }}/bin/shutdown.sh
+
+          User=tomcat
+          Group=tomcat
+
+          Restart=always
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Reload systemd daemon
+      systemd:
+        daemon_reload: yes
+
+    - name: Start and enable Tomcat
+      systemd:
+        name: tomcat
+        state: started
+        enabled: yes
+
+    - name: Check Tomcat status
+      command: systemctl status tomcat
+      register: tomcat_status
+      changed_when: false
+
+    - name: Display Tomcat status
+      debug:
+        var: tomcat_status.stdout_lines

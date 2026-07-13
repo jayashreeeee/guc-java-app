@@ -1,0 +1,41 @@
+---
+- name: Deploy GUC Backend WAR to Tomcat
+  hosts: tomcat_servers
+  become: yes
+
+  vars:
+    war_file: guc-backend.war
+    tomcat_webapps: /opt/tomcat/webapps
+
+  tasks:
+
+    - name: Stop Tomcat
+      systemd:
+        name: tomcat
+        state: stopped
+
+    - name: Remove old WAR
+      file:
+        path: "{{ tomcat_webapps }}/{{ war_file }}"
+        state: absent
+
+    - name: Copy WAR file
+      copy:
+        src: "{{ war_file }}"
+        dest: "{{ tomcat_webapps }}/{{ war_file }}"
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Start Tomcat
+      systemd:
+        name: tomcat
+        state: started
+
+    - name: Check Tomcat status
+      systemd:
+        name: tomcat
+      register: tomcat_status
+
+    - debug:
+        var: tomcat_status.status.ActiveState
